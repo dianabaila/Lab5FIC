@@ -1,0 +1,99 @@
+	.file	"l2_1.c"
+	.text
+	.globl	absdiff
+	.type	absdiff, @function
+absdiff:
+.LFB0:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -4(%rbp)
+	movl	%esi, -8(%rbp)
+	movl	-4(%rbp), %eax
+	cmpl	-8(%rbp), %eax
+	jge	.L2
+	movl	-4(%rbp), %eax
+	movl	-8(%rbp), %edx
+	subl	%eax, %edx
+	movl	%edx, %eax
+	jmp	.L3
+.L2:
+	movl	-8(%rbp), %eax
+	movl	-4(%rbp), %edx
+	subl	%eax, %edx
+	movl	%edx, %eax
+.L3:
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE0:
+	.size	absdiff, .-absdiff
+	.ident	"GCC: (Ubuntu 4.8.4-2ubuntu1~14.04.3) 4.8.4"
+	.section	.note.GNU-stack,"",@progbits
+
+
+
+
+
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* Lungimea maxima a unei linii. */
+#define SIZE 1000
+ 
+/* Numarul de linii citite. */
+#define CATE 100
+
+ 
+int main(void)
+{
+    FILE *f;
+    char linie[SIZE];
+    int i,count=0;
+    int countMov=0, countJmp=0;
+ 
+    f = fopen("l2_1.s", "r");
+    if (!f) {
+        perror("Eroare la deschiderea fisierului");
+        exit(EXIT_FAILURE);
+    }
+ 
+    for (i = 0; i < CATE; i++) {
+     {   /* Citim o linie din fisier. Daca dam de sfarsitul
+           de fisier sau are loc o eroare, iesim din bucla. 
+         */
+        if (!fgets(linie, SIZE, f)) break;
+          
+       if(strstr(linie,"add")) 
+	count++;
+       if(strstr(linie,"sub")) 
+	count++;
+       if(strstr(linie,"inc")) count++;
+       if(strstr(linie,"dec")) count++;
+       if(strstr(linie,"mul")) count++;
+       if(strstr(linie,"imul")) count++;
+       if(strstr(linie,"div")) count++;
+       if(strstr(linie,"idiv")) count++;
+       if(strstr(linie,"mov")) countMov++;
+       if(strstr(linie,"jmp")) countJmp++; 
+       
+     }
+        
+                   
+        /* Afisam linia pe ecran. */
+        //puts(linie);
+        }
+        printf("------>>%d",count);
+    
+ 
+    fclose(f);
+    return 0;
+}
